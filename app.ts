@@ -7,6 +7,7 @@ import 'reflect-metadata'
 import { myDataSource } from './src/config/db.config'
 import { requestLogger } from './src/middlewares/requestLogger'
 import logger from './src/lib/logger'
+import { checkJwt, decodeJwt, routesExcludedFromJwtAuthentication, unless } from './src/middlewares/authenticate'
 
 dotenv.config()
 
@@ -28,6 +29,10 @@ app.use(express.json({ limit: '15mb' }))
 app.use(express.urlencoded({ limit: '15mb', extended: true }))
 app.use(cookieParser())
 app.use(requestLogger)
+
+
+app.use(unless(routesExcludedFromJwtAuthentication, checkJwt), decodeJwt)
+// app.use('/v1', '')
 
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
