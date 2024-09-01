@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import 'reflect-metadata'
+import { myDataSource } from './src/config/db.config'
 
 dotenv.config()
 
@@ -37,6 +38,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 if (process.env.NODE_ENV === 'production') {
   app.use(helmet({ contentSecurityPolicy: false }))
 }
+
+myDataSource.initialize().catch((err) => {
+  console.error('Database connection error: ', err)
+})
 
 app.listen(port, () => {
   console.info(`Server is up and running at port: ${port}.`)
