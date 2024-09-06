@@ -26,5 +26,26 @@ Node.js, TypeScript, Express.js, (MongoDB & Mongoose), Nodemailer, Node-Cron, PD
 
 1. Clone the Repository
 
-git clone https://github.com/thoraf20/invoice-generation-app.git
-cd invoice-generation-app
+2. Install dependencies
+
+npm install
+
+3. Environment Configuration
+Create a .env file in the root directory to store environment variables:
+
+touch .env
+
+Inside the .env file, add the following:
+
+MONGO_URI=mongodb://localhost:27017/invoiceDB  # Replace with your MongoDB connection string
+PORT=5000                                      # Define the port for the app to run on
+SECRET_KEY=your_secret_key_here                # Set a secret key for authentication and encryption
+
+4. Build the app
+
+npm run build
+
+5. Start the app in development mode
+
+npm run dev
+
