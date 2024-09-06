@@ -1,19 +1,16 @@
 import { StatusCodes } from 'http-status-codes'
 
 export function APIError({
-  code,
-  message,
   status,
+  message,
   data,
 }: {
-  code: number
-  message: string
   status: StatusCodes
+  message: string
   data?: any[]
 }) {
-  this.code = code
-  this.message = message
   this.status = status
+  this.message = message
   this.name = 'APIError'
   this.data = data
 }
