@@ -15,10 +15,7 @@ export const decodeJwt = (req: Request, res: Response, next: NextFunction) => {
   res.locals.user = {
     id: decoded?.id,
     email: decoded?.email,
-    organizationId: decoded?.tenantId,
-    roleId: decoded?.roleId,
   }
-
   next()
 }
 
@@ -32,4 +29,4 @@ export const unless = (path: string[], middleware: any) => {
   }
 }
 
-export const routesExcludedFromJwtAuthentication = []
+export const routesExcludedFromJwtAuthentication = ['/v1/register', '/v1/login', '/v1/email/verify']

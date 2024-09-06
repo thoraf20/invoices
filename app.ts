@@ -9,7 +9,7 @@ import { requestLogger } from './src/middlewares/requestLogger'
 import logger from './src/lib/logger'
 import { checkJwt, decodeJwt, routesExcludedFromJwtAuthentication, unless } from './src/middlewares/authenticate'
 import v1Router from './urls'
-import { APIError } from 'src/helpers'
+import { APIError } from './src/helpers'
 
 dotenv.config()
 
@@ -40,19 +40,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error({ message: err.message, code: err.name, name: err.stack })
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  if(error instanceof Error) {
-      return (new APIError({
-        status: 500,
-        message: err.message
-      }))
-    } else {
-      return (
-        new APIError({
-          status: 500,
-          message: 'internal server error',
-        })
-      )
-    }
+
+  return res.status(err.status).json({ msg: err.message})
 })
 
 // Security
