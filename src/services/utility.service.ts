@@ -16,10 +16,6 @@ export class Utility {
     return `${name.toLowerCase().replace(/\s+/g, '-')}`
   }
 
-  generateStagingSlug = (name: string): string => {
-    return `${name.toLowerCase().replace(/\s+/g, '-')}` + '-staging'
-  }
-
   hashPassword = (password: string): string => {
     return bcrypt.hashSync(password, 10)
   }

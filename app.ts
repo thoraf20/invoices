@@ -4,10 +4,11 @@ import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import 'reflect-metadata'
-import { myDataSource } from './src/config/db.config'
+import connectDB from './src/config/db.config'
 import { requestLogger } from './src/middlewares/requestLogger'
 import logger from './src/lib/logger'
 import { checkJwt, decodeJwt, routesExcludedFromJwtAuthentication, unless } from './src/middlewares/authenticate'
+import v1Router from './urls'
 
 dotenv.config()
 
@@ -32,8 +33,7 @@ app.use(requestLogger)
 
 
 app.use(unless(routesExcludedFromJwtAuthentication, checkJwt), decodeJwt)
-// app.use('/v1', '')
-
+app.use('/v1', v1Router)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error({ message: err.message, code: err.name, name: err.stack })
@@ -47,9 +47,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(helmet({ contentSecurityPolicy: false }))
 }
 
-myDataSource.initialize().catch((err) => {
-  logger.error('Database connection error: ', err)
-})
+connectDB()
 
 app.listen(port, () => {
   logger.info(`Server is up and running at port: ${port}.`)
