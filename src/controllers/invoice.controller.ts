@@ -2,6 +2,8 @@ import { RequestHandler } from 'express'
 import Client from '../models/client.model'
 import Invoice, { InvoiceItem } from '../models/invoice.model'
 import { APIError } from '../helpers'
+import { generateInvoicePDF } from '../services/utility.service'
+import path from 'path'
 
 export const createInvoiceHandler: RequestHandler = async(req, res, next) => {
   const { clientId, oneTimeClient, items, dueDate } = req.body
@@ -40,12 +42,47 @@ export const createInvoiceHandler: RequestHandler = async(req, res, next) => {
   return res.status(201).json({ msg: "Invoice successfully created", data: invoice})
 }
 
+export const downloadInvoicePDF = async(req, res, next) => {
+  const { invoiceId } = req.params
+
+  const invoiceDetails = await Invoice.findById(invoiceId).populate('clientId')
+
+  if (!invoiceDetails) {
+    return next(new APIError({
+      message: 'invoice not found',
+      status: 404
+    }))
+  }
+
+  const outputPath = path.join(__dirname, `../../invoices/invoice-${invoiceDetails.invoiceNumber}.pdf`);
+  const invoicePDF = generateInvoicePDF(invoiceDetails, outputPath)
+
+  return res
+    .status(201)
+    .json({ msg: 'Invoice successfully created', data: { invoice: invoicePDF} })
+}
+
+export const sendInvoice = async(req, res, next) => {
+  const { invoiceId } = req.params
+
+  const invoiceDetails = await Invoice.findById(invoiceId).populate('clientId')
+
+  if (!invoiceDetails) {
+    return next(new APIError({
+      message: 'invoice not found',
+      status: 404
+    }))
+  }
+
+  //TODO: send invoice to client
+}
+
 export const fetchAllInvoices: RequestHandler = async(_req, res) => {
   const invoices = await Invoice.find({ userId: res.locals.user.id })
 
-return res
-  .status(200)
-  .json({ msg: 'Invoices successfully fetch', data: invoices })
+  return res
+    .status(200)
+    .json({ msg: 'Invoices successfully fetch', data: invoices })
 }
 
 export const fetchInvoice: RequestHandler = async (req, res, next) => {

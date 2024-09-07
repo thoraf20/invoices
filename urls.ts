@@ -5,7 +5,7 @@ import { emailVerificationSchema, loginSchema, registerSchema } from './src/vali
 import { createClientSchema } from './src/validations/client.validation'
 import { createClientHandler, fetchAllClients, fetchClient } from './src/controllers/client.controller'
 import { createInvoiceSchema } from './src/validations/invoice.validation'
-import { createInvoiceHandler, fetchAllInvoices, fetchInvoice } from './src/controllers/invoice.controller'
+import { createInvoiceHandler, downloadInvoicePDF, fetchAllInvoices, fetchInvoice, sendInvoice } from './src/controllers/invoice.controller'
 
 const router = express.Router()
 
@@ -21,6 +21,8 @@ router.get('/clients/:id',  fetchClient)
 
 // invoice
 router.post("/invoices", validateRequest(createInvoiceSchema), createInvoiceHandler)
+router.post('/invoices/:invoiceId/download', downloadInvoicePDF)
+router.post('/invoices/:invoiceId/send', sendInvoice)
 router.get('/invoices', fetchAllInvoices)
 router.get('/invoices/:invoiceId', fetchInvoice)
 
