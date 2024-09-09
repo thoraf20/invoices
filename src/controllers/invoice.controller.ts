@@ -87,17 +87,33 @@ export const fetchAllInvoices: RequestHandler = async(_req, res) => {
 
 export const fetchInvoice: RequestHandler = async (req, res, next) => {
   const { invoiceId } = req.params
+  const { clientId } = req.query
 
-  const invoice = await Invoice.findById(invoiceId)
+  let invoiceData;
 
-  if (!invoice) {
-      return next(new APIError({
-      message: 'saved client not found',
-      status: 404
-    }))
+  if (invoiceId) {
+    invoiceData = await Invoice.findById(invoiceId).populate('clientId')
+
+    if (!invoiceData) {
+        return next(new APIError({
+        message: 'invoice not found',
+        status: 404
+      }))
+    }
+  }
+
+  if(clientId) {
+    invoiceData = await Invoice.findById(clientId).populate('clientId')
+
+    if (!invoiceData) {
+        return next(new APIError({
+        message: 'client not found',
+        status: 404
+      }))
+    }
   }
 
   return res
     .status(200)
-    .json({ msg: 'Invoice successfully fetch', data: invoice })
+    .json({ msg: 'Invoice successfully fetch', data: invoiceData })
 }
