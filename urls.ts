@@ -3,12 +3,11 @@ import { loginHandler, registerHandler, verifyEmailHandler } from './src/control
 import { validateRequest } from './src/middlewares/requestValidation'
 import { emailVerificationSchema, loginSchema, registerSchema } from './src/validations/auth.validation'
 import { createClientSchema } from './src/validations/client.validation'
-import { createClientHandler, fetchAllClients, fetchClient } from './src/controllers/client.controller'
+import { createClientHandler, fetchAllClients, fetchClient, removeClientData, updateClientData } from './src/controllers/client.controller'
 import { createInvoiceSchema } from './src/validations/invoice.validation'
 import { createInvoiceHandler, downloadInvoicePDF, fetchAllInvoices, fetchInvoice, sendInvoice } from './src/controllers/invoice.controller'
 
 const router = express.Router()
-
 
 // auth
 router.post("/register", validateRequest(registerSchema), registerHandler)
@@ -19,6 +18,8 @@ router.post('/login', validateRequest(loginSchema), loginHandler)
 router.post("/clients", validateRequest(createClientSchema), createClientHandler)
 router.get('/clients', fetchAllClients)
 router.get('/clients/:id',  fetchClient)
+router.patch('/clients/:id', updateClientData)
+router.delete('/clients/:id', removeClientData)
 
 // invoice
 router.post("/invoices", validateRequest(createInvoiceSchema), createInvoiceHandler)

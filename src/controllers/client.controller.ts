@@ -47,3 +47,37 @@ export const fetchAllClients: RequestHandler = async(req, res) =>{
     .status(200)
     .json({ message: 'Clients fetch successfully', data: clientExist })
 }
+
+export const updateClientData: RequestHandler = async(req, res, next) => {
+  const { clientId } = req.params
+
+  const clientExist = await Client.findOne({ _id: clientId })
+
+  if (!clientExist) {
+    return next(new APIError({
+      message: 'client not found',
+      status: 404
+    }))
+  }
+
+  await Client.updateOne({ _id: clientId }, { ...req.body })
+
+  return res.status(201).json({ msg: 'client data updated successfully'})
+}
+
+export const removeClientData: RequestHandler = async(req, res, next) => {
+  const { clientId } = req.params
+
+  const clientExist = await Client.findOne({ _id: clientId })
+
+  if (!clientExist) {
+    return next(new APIError({
+      message: 'client not found',
+      status: 404
+    }))
+  }
+
+  await Client.deleteOne({ _id: clientId })
+
+  return res.status(201).json({ msg: 'client data updated successfully'})
+}
