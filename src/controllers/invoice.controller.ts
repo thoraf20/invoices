@@ -117,3 +117,37 @@ export const fetchInvoice: RequestHandler = async (req, res, next) => {
     .status(200)
     .json({ msg: 'Invoice successfully fetch', data: invoiceData })
 }
+
+export const updateInvoiceData: RequestHandler = async(req, res, next) => {
+  const { invoiceId } = req.params
+
+  const invoiceData = await Invoice.findById(invoiceId)
+
+  if (!invoiceData) {
+      return next(new APIError({
+      message: 'invoice not found',
+      status: 404
+    }))
+  }
+
+  await Invoice.updateOne({ _id: invoiceId}, { ...req.body })
+
+  return res.status(201).json({ msg: "Invoice updated successfully"})
+}
+
+export const deleteInvoiceData: RequestHandler = async(req, res, next) => {
+  const { invoiceId } = req.params
+
+  const invoiceData = await Invoice.findById(invoiceId)
+
+  if (!invoiceData) {
+      return next(new APIError({
+      message: 'invoice not found',
+      status: 404
+    }))
+  }
+
+  await Invoice.deleteOne({ _id: invoiceId})
+
+  return res.status(201).json({ msg: "Invoice deleted successfully"})
+}

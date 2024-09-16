@@ -79,5 +79,5 @@ export const removeClientData: RequestHandler = async(req, res, next) => {
 
   await Client.deleteOne({ _id: clientId })
 
-  return res.status(201).json({ msg: 'client data updated successfully'})
+  return res.status(201).json({ msg: 'client data deleted successfully'})
 }

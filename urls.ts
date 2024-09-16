@@ -5,7 +5,7 @@ import { emailVerificationSchema, loginSchema, registerSchema } from './src/vali
 import { createClientSchema } from './src/validations/client.validation'
 import { createClientHandler, fetchAllClients, fetchClient, removeClientData, updateClientData } from './src/controllers/client.controller'
 import { createInvoiceSchema } from './src/validations/invoice.validation'
-import { createInvoiceHandler, downloadInvoicePDF, fetchAllInvoices, fetchInvoice, sendInvoice } from './src/controllers/invoice.controller'
+import { createInvoiceHandler, deleteInvoiceData, downloadInvoicePDF, fetchAllInvoices, fetchInvoice, sendInvoice, updateInvoiceData } from './src/controllers/invoice.controller'
 
 const router = express.Router()
 
@@ -27,5 +27,7 @@ router.post('/invoices/:invoiceId/download', downloadInvoicePDF)
 router.post('/invoices/:invoiceId/send', sendInvoice)
 router.get('/invoices', fetchAllInvoices)
 router.get('/invoices/:invoiceId', fetchInvoice)
+router.patch('/invoices/:invoiceId', updateInvoiceData)
+router.delete('/invoices/:invoiceId', deleteInvoiceData)
 
 export default router
