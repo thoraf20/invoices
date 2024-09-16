@@ -6,6 +6,7 @@ import { createClientSchema } from './src/validations/client.validation'
 import { createClientHandler, fetchAllClients, fetchClient, removeClientData, updateClientData } from './src/controllers/client.controller'
 import { createInvoiceSchema } from './src/validations/invoice.validation'
 import { createInvoiceHandler, deleteInvoiceData, downloadInvoicePDF, fetchAllInvoices, fetchInvoice, sendInvoice, updateInvoiceData } from './src/controllers/invoice.controller'
+import { initiatePayment, verifyPayment } from './src/controllers/invoice.payment.controller'
 
 const router = express.Router()
 
@@ -29,5 +30,9 @@ router.get('/invoices', fetchAllInvoices)
 router.get('/invoices/:invoiceId', fetchInvoice)
 router.patch('/invoices/:invoiceId', updateInvoiceData)
 router.delete('/invoices/:invoiceId', deleteInvoiceData)
+
+// invoice payment
+router.post('/payment/initiate', initiatePayment)
+router.post('/payment/verify', verifyPayment)
 
 export default router

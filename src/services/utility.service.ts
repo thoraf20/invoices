@@ -5,6 +5,7 @@ import PDFDocument from 'pdfkit'
 import fs from 'fs'
 import { InvoiceItem } from '../models/invoice.model'
 import path from 'path'
+import axios from 'axios'
 
 export const hashPassword = (password: string): string => {
     return bcrypt.hashSync(password, 10)
@@ -107,3 +108,64 @@ export const generateInvoicePDF = (invoice: any, outputPath: string): void => {
   })
 };
 
+export const InitializeTransaction = async (data: {
+  clientId: string
+  invoiceId: string, 
+  email: string
+  amount: number
+}) => {
+  try {
+    const apiUrl = 'https://api.paystack.co/transaction/initialize'
+
+    const headers = {
+      Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+      'Content-Type': 'application/json',
+    }
+
+    const metadata = {
+      custom_fields: [
+        {
+          display_name: 'clientId',
+          variable_name: 'clientId',
+          value: data.clientId,
+        },
+        {
+          display_name: 'invoiceId',
+          variable_name: 'invoiceId',
+          value: data.invoiceId,
+        },
+      ],
+    }
+
+    const payload = {
+      email: data.email,
+      amount: data.amount * 100,
+      metadata,
+    }
+
+    const response = await axios.post(apiUrl, payload, { headers })
+
+    return response.data.data
+  } catch (error) {
+    console.error('Error while initializing payment link:', error)
+    throw error // Re-throw the error so that the caller can handle it if needed
+  }
+}
+
+export const VerifyTransaction = async (reference: string) => {
+  try {
+    const apiUrl = `https://api.paystack.co/transaction/verify/${reference}`;
+
+    const headers = {
+      Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+      'Content-Type': 'application/json',
+    };
+
+    const response = await axios.get(apiUrl, { headers });
+
+    return response.data.data;
+  } catch (error) {
+    console.error('Error verifying payment:', error);
+    throw error; // Re-throw the error so that the caller can handle it if needed
+  }
+}

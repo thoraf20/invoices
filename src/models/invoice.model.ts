@@ -14,7 +14,7 @@ interface OneTimeClient {
   phone?: string
 }
 
-export interface Invoice extends Document {
+interface Invoice extends Document {
   userId: string
   clientId?: mongoose.Types.ObjectId // Optional, for saved clients
   oneTimeClient?: OneTimeClient // Optional, for one-time clients
