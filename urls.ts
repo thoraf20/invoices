@@ -9,6 +9,7 @@ import { createInvoiceHandler, downloadInvoicePDF, fetchAllInvoices, fetchInvoic
 
 const router = express.Router()
 
+
 // auth
 router.post("/register", validateRequest(registerSchema), registerHandler)
 router.post('/email/verify', validateRequest(emailVerificationSchema), verifyEmailHandler)
